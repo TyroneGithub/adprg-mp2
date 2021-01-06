@@ -1,147 +1,145 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct Set{
+struct Set {
     int data;
     int isSet;
     struct Set* next;
 };
 
-/* function to swap data of two nodes a and b*/
-void swap(struct Set* a, struct Set* b) 
-{ 
+void swap (struct Set* a, struct Set* b) {
     int temp = a->data; 
     a->data = b->data; 
     b->data = temp; 
 } 
 
-
-void bubbleSort(struct Set* start) 
-{ 
-    int swapped, i; 
+void bubbleSort (struct Set* start) {
+    int swapped; 
     struct Set* ptr1; 
     struct Set* lptr = NULL; 
   
-    /* Checking for empty list */
     if (start == NULL) 
         return; 
   
-    do
-    { 
+    do { 
         swapped = 0; 
         ptr1 = start; 
   
-        while (ptr1->next != lptr) 
-        { 
-            if (ptr1->data > ptr1->next->data) 
-            {  
+        while (ptr1->next != lptr) { 
+            if (ptr1->data > ptr1->next->data) {  
                 swap(ptr1, ptr1->next); 
                 swapped = 1; 
             } 
+            
             ptr1 = ptr1->next; 
         } 
-        lptr = ptr1; 
-    } 
-    while (swapped); 
-} 
+        
+        lptr = ptr1;
+        
+    } while (swapped);
+}
 
-struct Set* create (){
+struct Set* create () {
     struct Set* set = NULL;
     set = (struct Set*)malloc(sizeof(struct Set));
     
     set->next = NULL;
     set->isSet = 0;
-    // printf("SHIT CREATED\n");
     
     return set;
 }
 
-// struct Set* add(struct Set** s,int data){
-//     if(!isSet){
-//         s->data = data;    
-//         s->isSet = 1;
-        
-//     }else{
-//         newNode = 
-//     }
-// }
-
-//
-
-/* Given a node prev_node, insert a new node after the given  
-prev_node */
-
-
-struct Set* add(struct Set* prev_set, int new_data)  
-{  
-    // if (prev_set == NULL){  
-    //     printf("the given previous node cannot be NULL");      
-    //     return;  
-    // }  
-
-    if(!prev_set->isSet){
+struct Set* add (struct Set* prev_set, int new_data) {
+    if (!prev_set->isSet) {
         struct Set* new_node = create();
+        
         prev_set->data = new_data;
         prev_set->isSet = 1;
         prev_set->next = new_node;
-    }else{
-
-        if(prev_set->data != new_data){
+        
+    } else {
+        if (prev_set->data != new_data)
             add(prev_set->next, new_data);
-        } 
-        else{
+        
+        else
             return prev_set; 
-        }
+		
     }
 
-    // sort dito 
-
     bubbleSort(prev_set);
+    
     return prev_set ;
- 
 }
 
-struct Set* unionSet(struct Set* a, struct Set* b){
+struct Set* unionSet (struct Set* a, struct Set* b){
     struct Set* s1 = create();
     
-
-    while(a->isSet){
+    while (a->isSet) {
         add(s1, a->data);
         a = a->next;
     }
     
-    while(b->isSet){
+    while (b->isSet) {
         add(s1, b->data);
         b = b->next;
     }
+	
+    return s1;
+}
 
+struct Set* intersectSet (struct Set* a, struct Set* b){
+    struct Set* s1 = create();
+    struct Set* b_start = b;
+    
+    while (a->isSet) {
+        while (b->isSet) {
+            if (a->data == b->data)
+                add(s1, a->data);
+            
+            b = b->next;
+        }
+        
+        b = b_start;
+        a = a->next;
+    }
     
     return s1;
 }
 
-struct Set* intersectSet(struct Set* a, struct Set* b){
-    struct Set* s1 = create();
-    struct Set* b_start = b;
-    while(a->isSet){
-        while(b->isSet){
-            if (a->data == b->data){
-                add(s1, a->data);
-            }
-            b = b->next;
+struct Set* difference (struct Set* s1, struct Set* s2) {
+	struct Set* temp = create();
+	struct Set* b_start = s2;
+	int found;
+    
+    while (s1->isSet) {
+    	found = 0;
+    	
+        while (s2->isSet) {
+            if (s1->data == s2->data) {
+            	found = 1;
+            	break;
+			}  
+            
+            s2 = s2->next;
         }
-        b = b_start;
-        a = a->next;
+        
+        if (!found) {
+        	add(temp, s1->data);
+		}
+        	
+        s2 = b_start;
+        s1 = s1->next;
     }
-    return s1;
+	
+	return temp;
 }
 
-
-  
-void print (struct Set* set){
-    if (set->isSet == 1){
-        printf ("%d ", set->data);
-        print (set->next);
+void print (struct Set* set) {
+    if (set->isSet == 1) {
+        printf("%d ", set->data);
+        print(set->next);
     }
+    
     else {
         printf("\n");
         return;
@@ -151,18 +149,10 @@ void print (struct Set* set){
 
 int main(){
 
-    struct Set* s1,* s2,* s3, *s4;
+    struct Set *s1, *s2, *s3, *s4;
 
     s1 = create();
     s2 = create();
-
-    //s1->data = 5;
-    // add(s1, 5);
-    // printf("hello %d\n",add(s1, 25)->data);
-    // add(s1, 30);
-    // printf("hello %d\n",add(s1, 20)->data);
-    // add(s1, 25);
-
 
     add(s1, 20);
     add(s1, 20);
@@ -188,21 +178,11 @@ int main(){
 
     printf("INTERSECT\n");
     print(intersectSet(s1, s2));
-
-    // add(s1, 5);
-
-    // printf("%d\n", s1->data);
-    // printf("%d\n", s1->next->data);
-    // printf("%d\n", s1->next->next->data);
-    // printf("%d\n", s1->next->next->next->data);
-
-    print (s1);
-
-//    s2 = create();
-//    s3 = create();
-
-
-
+    
+    printf("DIFFERENCE\n");
+    print(s1);
+    print(s2);
+    print(difference(s1, s2));
 
     return 0;
 }

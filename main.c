@@ -18,12 +18,12 @@ struct Set create(){
 
 struct Set add(struct Set* s, int e){
     printf("Inside add!\n");
-    if (!(s->isSet)){ //if node is empty
+    if (!(s->isSet)) { // if node is empty
         s->data = e;
         s->isSet = 1;
        // printf("%d", s->data);
-    } else{ 
-        //if node has data
+    } else { 
+        // if node has data
     	printf("New node!\n");
         *(s->next) = create();
     	printf("New nodesssss!\n");
@@ -48,17 +48,14 @@ void print(Set s){
 }
 */
 
-void printList(struct Set *start) 
-{ 
+void printList(struct Set *start) {
     struct Set *temp = start; 
     printf("\n"); 
 
-    while (temp!=NULL) 
-    { 
+    while (temp!=NULL) { 
         printf("%d ", temp->data); 
         temp = temp->next; 
     } 
-
 } 
 
 int main(){
@@ -70,16 +67,14 @@ int main(){
     s3 = create();
     printf("Hello worldxXXXX\n");
     
-    // 
-    add(&s1, 1);// [1]
+    add(&s1, 1); // [1]
     add(&s1, 2);
 
-
-    //printf("Hello worldx");
+//	printf("Hello worldx");
     
     printList(&s1);
 
-   // printf("Hello world");
+//	printf("Hello world");
 
     return 0; 
 }
